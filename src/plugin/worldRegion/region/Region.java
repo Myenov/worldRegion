@@ -14,6 +14,7 @@ public class Region {
 
     public AllFlagList[] flags;
     public final int size;
+    public final boolean regionIsOp;
 
     private String creatorNick;
     private UUID creator;
@@ -41,6 +42,7 @@ public class Region {
         }
         this.flags = defaultFlag;
         this.world = world;
+        this.regionIsOp = false;
     }
 
     public Region(String name,
@@ -61,6 +63,28 @@ public class Region {
         }
         this.flags = defaultFlag;
         this.world = world;
+        this.regionIsOp = false;
+    }
+
+    public Region(String name,
+                  int[] pos1, int[] pos2,
+                  UUID creator, String creatorNick,
+                  boolean creatorIsOwner,
+                  AllFlagList[] defaultFlag,
+                  String world, boolean creatorIsOp) {
+        this.name = name;
+        this.position1 = pos1;
+        this.position2 = pos2;
+        this.creator = creator;
+        this.creatorNick = creatorNick;
+        this.size = addSize();
+        if (creatorIsOwner) {
+            this.owner = creator;
+            this.ownerNick = creatorNick;
+        }
+        this.flags = defaultFlag;
+        this.world = world;
+        this.regionIsOp = creatorIsOp;
     }
 
     private int addSize() {

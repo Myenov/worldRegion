@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckRegion {
-    public boolean isRegion(Location locate) {
+    public static boolean isRegion(Location locate) {
         return getRegion(locate) != null;
     }
 
-    public Region getRegion(Location locate) {
+    public static Region getRegion(Location locate) {
         for (Region region : StorageRegion.getRegions()) {
             if (isLocationInRegion(locate, region)) {
                 return region;
@@ -19,7 +19,7 @@ public class CheckRegion {
         return null;
     }
 
-    public List<Region> getRegionAt(Location locate) {
+    public static List<Region> getRegionAt(Location locate) {
         List<Region> regionsAtLocation = new ArrayList<>();
         for (Region region : StorageRegion.getRegions()) {
             if (isLocationInRegion(locate, region)) {
@@ -29,7 +29,7 @@ public class CheckRegion {
         return regionsAtLocation;
     }
 
-    private boolean isLocationInRegion(Location location, Region region) {
+    private static boolean isLocationInRegion(Location location, Region region) {
         int[] pos1 = region.getPosition1();
         int[] pos2 = region.getPosition2();
 
@@ -50,6 +50,4 @@ public class CheckRegion {
                locY >= minY && locY <= maxY &&
                locZ >= minZ && locZ <= maxZ;
     }
-
-
 }

@@ -23,4 +23,28 @@ public class StorageRegion {
     public static List<Region> getRegions() {
         return new ArrayList<>(Regions);
     }
+
+    public static void addPosition1(UUID player, Location locate) {
+        Position1.put(player,locate);
+    }
+
+    public static void addPosition2(UUID player, Location locate) {
+        Position2.put(player,locate);
+    }
+
+    public static Map<UUID, Location> getPosition1() {
+        return new ConcurrentHashMap<>(Position1);
+    }
+
+    public static Map<UUID, Location> getPosition2() {
+        return new ConcurrentHashMap<>(Position2);
+    }
+
+    public static Location getPositionOneOnUUID(UUID player) {
+        return Position1.get(player);
+    }
+
+    public static Location getPositionTwoOnUUID(UUID player) {
+        return Position2.get(player);
+    }
 }

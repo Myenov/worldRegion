@@ -2,6 +2,7 @@ package plugin.worldRegion.flags;
 
 public enum AllFlagList {
     BreakBlock, PutBlock, OpenBlock,
+    DropItems, InputCommand,Walk,
 
     OpenWorkbench, OpenFurnace, OpenDoor, OpenHatch, OpenGate,
     OpenCartographyTable, OpenFletchingTable, OpenSmithingTable,
