@@ -23,3 +23,10 @@ public enum AllFlagList {
     InteractBed, InteractDayLightDetector, InteractPressurePlate,
     InteractLever, InteractButton,
 }
+
+/*
+* надо добавить взаимодействие с:
+* горшками, ягодами,
+* Земли в мотыгой, земли с лопатой
+*
+* */

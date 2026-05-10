@@ -3,9 +3,7 @@ package plugin.worldRegion.region;
 import cn.nukkit.level.Location;
 import plugin.worldRegion.flags.AllFlagList;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Region {
     public String name;
@@ -21,7 +19,10 @@ public class Region {
 
     private int[] position1 = new int[3];
     private int[] position2 = new int[3];
+    private Region parent;
+    private final List<Region> children;
     private String world;
+    private int priority;
 
     public Region(String name,
                   int posX1, int posY1, int posZ1,
@@ -43,6 +44,9 @@ public class Region {
         this.flags = defaultFlag;
         this.world = world;
         this.regionIsOp = false;
+        this.children = new ArrayList<>();
+        this.parent = null;
+        this.priority = 0;
     }
 
     public Region(String name,
@@ -64,6 +68,9 @@ public class Region {
         this.flags = defaultFlag;
         this.world = world;
         this.regionIsOp = false;
+        this.children = new ArrayList<>();
+        this.parent = null;
+        this.priority = 0;
     }
 
     public Region(String name,
@@ -85,6 +92,9 @@ public class Region {
         this.flags = defaultFlag;
         this.world = world;
         this.regionIsOp = creatorIsOp;
+        this.children = new ArrayList<>();
+        this.parent = null;
+        this.priority = 0;
     }
 
     private int addSize() {
@@ -113,13 +123,13 @@ public class Region {
     public  boolean contains(int x, int y, int z) {
 
         int minX = Math.min(position1[0], position2[0]);
-        int maxX = Math.min(position1[0], position2[0]);
+        int maxX = Math.max(position1[0], position2[0]);
 
         int minY = Math.min(position1[1], position2[1]);
-        int maxY = Math.min(position1[1], position2[1]);
+        int maxY = Math.max(position1[1], position2[1]);
 
         int minZ = Math.min(position1[2], position2[2]);
-        int maxZ = Math.min(position1[2], position2[2]);
+        int maxZ = Math.max(position1[2], position2[2]);
 
         return x >= minX && x <= maxX &&
                 y >= minY && y <= maxY &&
@@ -140,4 +150,37 @@ public class Region {
         return new Location(centerX, centerY, centerZ,
                 template.getLevel());
     }
+
+    public boolean addChild(Region child) {
+        if (!this.contains(child.position1[0], child.position1[1], child.position1[2]) ||
+                !this.contains(child.position2[0], child.position2[1], child.position2[2])) {
+            return false;
+        }
+
+        if (!this.world.equals(child.world)) {
+            return false;
+        }
+
+        if (child.parent != null) {
+            child.parent.removeChild(child);
+        }
+
+        child.parent = this;
+        this.children.add(child);
+        child.priority = this.priority + 1;
+
+        return true;
+    }
+
+    public void removeChild(Region child) {
+        this.children.remove(child);
+        if (child.parent == this) {
+            child.parent = null;
+            child.priority = 0;
+        }
+    }
+
+    public Region getParent() { return parent; }
+    public List<Region> getChildren() { return new ArrayList<>(children); }
+    public int getPriority() { return priority; }
 }
