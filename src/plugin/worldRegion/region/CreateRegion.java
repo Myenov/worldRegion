@@ -4,6 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.level.Location;
 import cn.nukkit.utils.TextFormat;
 import plugin.worldRegion.flags.AllFlagList;
+import plugin.worldRegion.region.reaction.SuccessfulCreation;
+import plugin.worldRegion.region.reaction.UnsuccessfulCreation;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,9 +17,7 @@ public class CreateRegion {
         Location pos1 = StorageRegion.getPositionOneOnUUID(playerUuid);
         Location pos2 = StorageRegion.getPositionTwoOnUUID(playerUuid);
         if (pos1 == null || pos2 == null) {
-            player.sendMessage(
-                    TextFormat.RED + "" + TextFormat.BOLD +
-                            "Сначала выберите две точки!");
+            UnsuccessfulCreation.execute(player, "select two points");
             return;
         }
 
@@ -28,28 +28,13 @@ public class CreateRegion {
                 createChildRegion(player, name, pos1, pos2, existingRegion);
             } else {
                 if (intersectsWithOtherOpRegions(pos1, pos2, player));
-            } /*
-                StorageRegion.addRegion(
-                        new Region(
-                            name,
-                                new int[]{(int) pos1.x, (int)pos1.y, (int)pos1.z},
-                                new int[]{(int) pos2.x, (int)pos2.y, (int)pos2.z},
-                                playerUuid, player.getName(), true,
-                                new AllFlagList[]{AllFlagList.DropItems,
-                                        AllFlagList.InputCommand, AllFlagList.Walk}, player.getLevel().getName(),
-                                true
-
-                        )
-                );*/
+            }
         }
         if (existingRegion != null) {
             if (existingRegion.owner.equals(playerUuid)) {
                 createChildRegion(player, name, pos1, pos2, existingRegion);
             } else {
-                player.sendMessage(TextFormat.RED +
-                        "Это место занято регионом '" + existingRegion.name + "'! " +
-                        "Вы можете создавать вложенные регионы только внутри своих.");
-                // переработать
+                UnsuccessfulCreation.execute(player, "this place is occupied by another region");
             }
         } else {
             if (CheckRegion.isIntersectingWithOtherRegions(pos1, pos2)) {
@@ -59,23 +44,19 @@ public class CreateRegion {
                     if (regionsList.length() > 0) regionsList.append(", ");
                     regionsList.append(r.name);
                 }
-                player.sendMessage(TextFormat.RED +
-                        "Ваш регион пересекается с существующими: " + regionsList.toString());
-                return; // переписать
+                UnsuccessfulCreation.execute(player, "you region intersects with another");
+                return;
             }
             createNormalRegion(player, name, pos1, pos2, false);
         }
     }
-    private static boolean intersectsWithOtherOpRegion(Location pos1, Location pos2, Player player) {
+    private static boolean intersectsWithOtherOpRegions(Location pos1, Location pos2, Player player) {
         List<Region> intersectingRegion = CheckRegion.getIntersectingRegions(pos1, pos2);
 
         for (Region region : intersectingRegion) {
             if (region.regionIsOp) {
-                player.sendMessage(TextFormat.RED +
-                        "Нельзя создать регион поверх административного региона '" +
-                        region.name + "'! Используйте вложенный регион.");
+                UnsuccessfulCreation.execute(player, "cannot create a region on top of an administrative region");
                 return true;
-                //переписать
             }
         }
         return false;
@@ -102,14 +83,9 @@ public class CreateRegion {
 
         StorageRegion.addRegion(newRegion);
         if (isOpRegion) {
-            player.sendMessage(TextFormat.GOLD +
-                    "Административный регион '" + name + "' создан!");
-
-            //переписать
+            SuccessfulCreation.execute(player, "admin region %" + name + "% creating");
         } else {
-            player.sendMessage(TextFormat.GREEN +
-                    "Регион '" + name + "' успешно создан!");
-            //переписать
+            SuccessfulCreation.execute(player, "region %" + name + "% creating");
         }
     }
 
@@ -128,7 +104,7 @@ public class CreateRegion {
             player.sendMessage(TextFormat.RED +
                     "Дочерний регион должен полностью находиться внутри родительского '" +
                     parentRegion.name + "'!");
-            return; //переписать
+            return;
         }
         for (Region sibling : parentRegion.getChildren()) {
             int[] sibPos1 = sibling.getPosition1();
@@ -144,9 +120,8 @@ public class CreateRegion {
             if (minX <= sibMaxX && maxX >= sibMinX &&
                     minY <= sibMaxY && maxY >= sibMinY &&
                     minZ <= sibMaxZ && maxZ >= sibMinZ) {
-                player.sendMessage(TextFormat.RED +
-                        "Пересечение с другим дочерним регионом '" + sibling.name + "'!");
-                return; //Переписать
+                UnsuccessfulCreation.execute(player, "intersection with a subsidiary region");
+                return;
             }
             if (CheckRegion.isIntersectingWithOtherRegions(pos1, pos2, parentRegion)) {
                 List<Region> intersecting = CheckRegion.getIntersectingRegions(pos1, pos2);
@@ -157,9 +132,8 @@ public class CreateRegion {
                         if (names.length() > 0) names.append(", ");
                         names.append(r.name);
                     }
-                    player.sendMessage(TextFormat.RED +
-                            "Пересечение с регионами вне родительского: " + names.toString());
-                    return; // переписать
+                    UnsuccessfulCreation.execute(player, "Intersection with regions outside the parent");
+                    return;
                 }
             }
 
@@ -177,12 +151,9 @@ public class CreateRegion {
 
             if (parentRegion.addChild(childRegion)) {
                 StorageRegion.addRegion(childRegion);
-                player.sendMessage(TextFormat.GREEN +
-                        "Вложенный регион '" + name + "' создан внутри '" +
-                        parentRegion.name + "'!"); //переписать
+                SuccessfulCreation.execute(player, "Nested region%" + name + "%created inside %" + parentRegion.name + "%!");
             } else {
-                player.sendMessage(TextFormat.RED +
-                        "Ошибка при создании вложенного региона!"); //переписать
+                UnsuccessfulCreation.execute(player, "Error creating nested region!");
             }
         }
     }

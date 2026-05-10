@@ -1,14 +1,14 @@
-package plugin.worldRegion.region.reaction;
+package plugin.worldRegion.flags.reaction;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import plugin.worldRegion.utils.GetUserLanguage;
 
-public class SuccessfulCreation {
+public class SuccessfulFlag {
     public static void execute(Player player, String placeholder) {
         player.sendMessage(
-                TextFormat.RED + "" +
-                TextFormat.BOLD + GetUserLanguage.get(placeholder, player.getName())
+                TextFormat.GREEN + "" +
+                        TextFormat.BOLD + GetUserLanguage.get(placeholder, player.getName())
         );
     }
 }

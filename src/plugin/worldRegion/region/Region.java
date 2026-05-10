@@ -10,7 +10,7 @@ public class Region {
     public String ownerNick;
     public UUID owner;
 
-    public AllFlagList[] flags;
+    public List<AllFlagList> flags = new ArrayList<>();
     public final int size;
     public final boolean regionIsOp;
 
@@ -41,7 +41,7 @@ public class Region {
             this.owner = creator;
             this.ownerNick = creatorNick;
         }
-        this.flags = defaultFlag;
+        this.flags = List.of(defaultFlag);
         this.world = world;
         this.regionIsOp = false;
         this.children = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Region {
             this.owner = creator;
             this.ownerNick = creatorNick;
         }
-        this.flags = defaultFlag;
+        this.flags = List.of(defaultFlag);
         this.world = world;
         this.regionIsOp = false;
         this.children = new ArrayList<>();
@@ -89,7 +89,7 @@ public class Region {
             this.owner = creator;
             this.ownerNick = creatorNick;
         }
-        this.flags = defaultFlag;
+        this.flags = List.of(defaultFlag);
         this.world = world;
         this.regionIsOp = creatorIsOp;
         this.children = new ArrayList<>();
@@ -120,7 +120,7 @@ public class Region {
         return this.world;
     }
 
-    public  boolean contains(int x, int y, int z) {
+    public boolean contains(int x, int y, int z) {
 
         int minX = Math.min(position1[0], position2[0]);
         int maxX = Math.max(position1[0], position2[0]);
