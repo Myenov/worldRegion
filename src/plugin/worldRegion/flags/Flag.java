@@ -1,6 +1,6 @@
 package plugin.worldRegion.flags;
 
-public enum AllFlagList {
+public enum Flags {
     BreakBlock, PutBlock, OpenBlock,
     DropItems, InputCommand,Walk,
 
