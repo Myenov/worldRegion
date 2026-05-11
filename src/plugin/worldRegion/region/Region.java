@@ -14,6 +14,10 @@ public class Region {
     public final int size;
     public final boolean regionIsOp;
 
+    public final List<String> residents = new ArrayList<>();
+    public final List<String> guests = new ArrayList<>();
+
+
     private String creatorNick;
     private UUID creator;
 
@@ -103,11 +107,10 @@ public class Region {
                 Math.abs(this.position1[2] - this.position2[2]);
     }
 
-    public Map<String, UUID> getCreator() {
-        Map<String, UUID> creatorStruct = new HashMap<>();
-        creatorStruct.put(this.creatorNick, this.creator);
-        return creatorStruct;
-    }
+    public UUID getCreatorUUID() { return creator; }
+
+    public String getCreatorName() { return creatorNick;}
+
     public int[] getPosition2() {
         return position2;
     }
