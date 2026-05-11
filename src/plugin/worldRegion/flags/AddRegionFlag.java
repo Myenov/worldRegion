@@ -7,7 +7,7 @@ import plugin.worldRegion.region.Region;
 
 
 public class AddRegionFlag {
-    public static void addFlag(Region region, Player player, AllFlagList flag) {
+    public static void addFlag(Region region, Player player, Flag flag) {
         if (player.isOp()) {
             region.flags.add(flag);
             SuccessfulFlag.execute(player, "successful flag add " + flag.toString());
@@ -25,8 +25,8 @@ public class AddRegionFlag {
         UnsuccessfulFlag.execute(player, "unknown error");
     }
 
-    public static void addFlag(Region region, Player player, AllFlagList[] flags) {
-        for (AllFlagList flag : flags) {
+    public static void addFlag(Region region, Player player, Flag[] flags) {
+        for (Flag flag : flags) {
             addFlag(region, player, flag);
         }
         return;

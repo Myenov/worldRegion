@@ -1,7 +1,7 @@
 package plugin.worldRegion.region;
 
 import cn.nukkit.level.Location;
-import plugin.worldRegion.flags.AllFlagList;
+import plugin.worldRegion.flags.Flag;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ public class Region {
     public String ownerNick;
     public UUID owner;
 
-    public List<AllFlagList> flags = new ArrayList<>();
+    public List<Flag> flags = new ArrayList<>();
     public final int size;
     public final boolean regionIsOp;
 
@@ -29,7 +29,7 @@ public class Region {
                   int posX2, int posY2, int posZ2,
                   UUID creator, String creatorNick,
                   boolean creatorIsOwner,
-                  AllFlagList[] defaultFlag,
+                  Flag[] defaultFlag,
                   String world) {
         this.name = name;
         this.position1 = new int[]{posX1, posY1, posZ1};
@@ -53,7 +53,7 @@ public class Region {
                   int[] pos1, int[] pos2,
                   UUID creator, String creatorNick,
                   boolean creatorIsOwner,
-                  AllFlagList[] defaultFlag,
+                  Flag[] defaultFlag,
                   String world) {
         this.name = name;
         this.position1 = pos1;
@@ -77,7 +77,7 @@ public class Region {
                   int[] pos1, int[] pos2,
                   UUID creator, String creatorNick,
                   boolean creatorIsOwner,
-                  AllFlagList[] defaultFlag,
+                  Flag[] defaultFlag,
                   String world, boolean creatorIsOp) {
         this.name = name;
         this.position1 = pos1;

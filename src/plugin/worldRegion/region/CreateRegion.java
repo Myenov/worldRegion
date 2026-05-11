@@ -2,13 +2,11 @@ package plugin.worldRegion.region;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Location;
-import cn.nukkit.utils.TextFormat;
-import plugin.worldRegion.flags.AllFlagList;
+import plugin.worldRegion.flags.Flag;
 import plugin.worldRegion.region.reaction.SuccessfulCreation;
 import plugin.worldRegion.region.reaction.UnsuccessfulCreation;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class CreateRegion {
@@ -72,10 +70,10 @@ public class CreateRegion {
                 player.getUniqueId(),
                 player.getName(),
                 true,
-                new AllFlagList[]{
-                        AllFlagList.DropItems,
-                        AllFlagList.InputCommand,
-                        AllFlagList.Walk
+                new Flag[]{
+                        Flag.DropItems,
+                        Flag.InputCommand,
+                        Flag.Walk
                 },
                 player.getLevel().getName(),
                 isOpRegion
@@ -101,9 +99,7 @@ public class CreateRegion {
 
         if (!parentRegion.contains(minX, minY, maxZ) ||
                 !parentRegion.contains(maxX, maxY, maxZ)) {
-            player.sendMessage(TextFormat.RED +
-                    "Дочерний регион должен полностью находиться внутри родительского '" +
-                    parentRegion.name + "'!");
+            UnsuccessfulCreation.execute(player, "A child region must be entirely contained within its parent region.");
             return;
         }
         for (Region sibling : parentRegion.getChildren()) {
@@ -129,7 +125,7 @@ public class CreateRegion {
                 if (!intersecting.isEmpty()) {
                     StringBuilder names = new StringBuilder();
                     for (Region r : intersecting) {
-                        if (names.length() > 0) names.append(", ");
+                        if (!names.isEmpty()) names.append(", ");
                         names.append(r.name);
                     }
                     UnsuccessfulCreation.execute(player, "Intersection with regions outside the parent");
@@ -144,7 +140,7 @@ public class CreateRegion {
                     player.getUniqueId(),
                     player.getName(),
                     true,
-                    parentRegion.flags.clone(),
+                    (Flag[]) parentRegion.flags.toArray(),
                     player.getLevel().getName(),
                     player.isOp()
             );

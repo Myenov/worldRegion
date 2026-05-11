@@ -102,7 +102,7 @@ public class CheckRegion {
             boolean intersects =
                     newMinX <= existMaxX && newMaxX >= existMinX &&
                     newMinY <= existMaxY && newMaxY >= existMinY &&
-                    newMinZ <= existMaxZ && newMaxZ >= existMaxZ;
+                    newMinZ <= existMaxZ && newMaxZ >= existMinZ;
 
             if (intersects) {
                 intersectingRegions.add(existingRegion);
